@@ -1,0 +1,74 @@
+/*
+struct ArrayList
+{
+    Project *data;
+    int size;
+};
+ArrayList *create(int);
+bool isEmpty(ArrayList *);
+bool insertItem(ArrayList *, int, int);
+void printList(ArrayList *);
+int searchItem(ArrayList *, int);
+bool deleteItem(ArrayList *, int);
+*/
+
+
+
+// ----------------------- Array List Functions ---------------------
+/*
+ArrayList *create(int maxSize)
+{
+    ArrayList *list = new ArrayList;
+    list->data = new Project[maxSize];
+    list->size = 0;
+    return list;
+}
+bool isEmpty(ArrayList *list)
+{
+    return list->size == 0;
+}
+bool insertItem(ArrayList *list, Project item, int tamMax)
+{
+    if (list->size >= tamMax)
+    {
+        return false;
+    }
+    list->data[list->size] = item;
+    list->size++;
+    return true;
+}
+void printList(ArrayList *list)
+{
+    cout << "\nList: ";
+    for (int i = 0; i < list->size; i++)
+    {
+        cout << list->data[i].id << " ";
+    }
+    cout << endl;
+}
+int searchItem(ArrayList *list, int val)
+{
+    for (int i = 0; i < list->size; i++)
+    {
+        if (list->data[i].id == val)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+bool deleteItem(ArrayList *list, int val)
+{
+    int first = searchItem(list, val);
+    if (first < 0)
+    {
+        return false;
+    }
+    list->size--;
+    for (int i = first; i < list->size; i++)
+    {
+        list->data[i] = list->data[i + 1];
+    }
+
+    return true;
+}

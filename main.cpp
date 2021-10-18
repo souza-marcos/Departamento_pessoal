@@ -1,22 +1,16 @@
 #include <iostream>
 #include <ctime>
+#include "./src/arraylist.hpp"
+#include "./src/linkedlist.hpp"
+#include <vector>
 using namespace std;
 
 struct Project
 {
+    int id;
+    string name;
+    float hoursPerWeek;
 };
-
-struct ArrayList
-{
-    Project *data;
-    int size;
-};
-ArrayList *create(int);
-bool isEmpty(ArrayList *);
-bool insertItem(ArrayList *, int, int);
-void printList(ArrayList *);
-int searchItem(ArrayList *, int);
-bool deleteItem(ArrayList *, int);
 
 struct Employee
 {
@@ -24,7 +18,7 @@ struct Employee
     string name;
     string address;
     int nDepends;
-    ArrayList projects;
+    ArrayList<Project> projects;
 };
 
 // typedef struct
@@ -34,105 +28,77 @@ struct Employee
 //     char cpf[12]; //Only numbers and \0
 // } Employee;
 
-struct Node
-{
-    Employee data;
-    Node *next = NULL;
-};
-
-typedef struct
-{
-    Node *head;
-    Node *last;
-} LinkedList;
-
-LinkedList *create();
-void insert(Employee, LinkedList *);
-
+void mainMenu();
+void registerEmployee();
 int main()
 {
 
+    cout << "BEM VINDO AO SISTEMA DE DEPARTAMENTO PESSOAL\n";
+    //mainMenu();
+
+    ArrayList<Project> *ps = create<Project>(5);
+
+    ArrayList<int> nus = *create<int>(10);
+
+
+    Project p;
+    p.name = "Marcos";
+
+    cout << "COnseguiu? " << (insertItem(ps, p, 5)) ? "Sim" : "nao";
+
+    cout << "VOLTE SEMPRE!!";
     return 0;
 }
-// -----------------------   Others Functions   ---------------------
+// ----------------------- Business Rule Functions ---------------------
 
-// ----------------------- Array List Functions ---------------------
+void mainMenu()
+{
+    int option;
+    do
+    {
+        cout << "MENU PRINCIPAL\n";
+        cout << "(1) - Inserir novo funcionario.\n";
+        cout << "(0) - Sair. \n";
+        cout << "Sua Opcao: ";
+        cin >> option;
 
-ArrayList *create(int maxSize)
-{
-    ArrayList *list = new ArrayList;
-    list->data = new int[maxSize];
-    list->size = 0;
-    return list;
-}
-bool isEmpty(ArrayList *list)
-{
-    return list->size == 0;
-}
-bool insertItem(ArrayList *list, int item, int tamMax)
-{
-    if (list->size >= tamMax)
-    {
-        return false;
-    }
-    list->data[list->size] = item;
-    list->size++;
-    return true;
-}
-void printList(ArrayList *list)
-{
-    cout << "\nList: ";
-    for (int i = 0; i < list->size; i++)
-    {
-        cout << list->data[i] << " ";
-    }
-    cout << endl;
-}
-int searchItem(ArrayList *list, int val)
-{
-    for (int i = 0; i < list->size; i++)
-    {
-        if (list->data[i] == val)
+        switch (option)
         {
-            return i;
+        case 1:
+            registerEmployee();
+            break;
+
+        default:
+            break;
         }
-    }
-    return -1;
-}
-bool deleteItem(ArrayList *list, int val)
-{
-    int first = searchItem(list, val);
-    if (first < 0)
-    {
-        return false;
-    }
-    list->size--;
-    for (int i = first; i < list->size; i++)
-    {
-        list->data[i] = list->data[i + 1];
-    }
 
-    return true;
+    } while (option != 0);
 }
 
-// ----------------------- Linked List Functions ---------------------
-void insert(Employee e, LinkedList *list)
+void registerEmployee()
 {
-    if (list->head == NULL)
+    Employee e;
+    cout << "INCLUSAO DE NOVO FUNCIONARIO\n";
+    cout << "Digite o codigo: ";
+    cin >> e.id;
+    cout << "Digite o nome: ";
+    cin >> e.name;
+    cout << "Digite o endereco: ";
+    cin >> e.address;
+    cout << "Digite a quantidade de dependentes: ";
+    cin >> e.nDepends;
+    cout << "PROJETOS\n";
+    char nextProject;
+    do
     {
-        list->head = new Node; //Segmentation fault
-        list->last = list->head;
-        list->head->next = NULL;
-        list->last->data = e;
-        return;
-    }
-    list->last->next = new Node;
-    list->last = list->last->next;
-    list->last->next = NULL;
-    list->last->data = e;
-}
-LinkedList *create()
-{
-    LinkedList *list = new LinkedList;
-    return list;
+        Project p;
+        cout << "Digite o codigo do projeto: ";
+        cin >> p.id;
+        cout << "Digite o nome: ";
+        cin >> p.name;
+        cout << "Digite as horas por semana para esse projeto: ";
+        cin >> p.hoursPerWeek;
+        cout << "\nExiste mais projetos para este funcionario? (s/n) ";
+        cin >> nextProject;
+    } while (nextProject != 'n');
 }
