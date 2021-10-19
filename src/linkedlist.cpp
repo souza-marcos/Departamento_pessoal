@@ -10,12 +10,12 @@ struct Node
 template <typename TData>
 struct LinkedList
 {
-    Node<TData> *head;
-    Node<TData> *last;
+    Node<TData> *head = NULL;
+    Node<TData> *last = NULL;
 };
 
 template <typename TData>
-void insert(TData e, LinkedList<TData> *list)
+void insertItem(TData e, LinkedList<TData> *list)
 {
     if (list->head == NULL)
     {
@@ -30,9 +30,48 @@ void insert(TData e, LinkedList<TData> *list)
     list->last->next = NULL;
     list->last->data = e;
 }
+
 template <typename TData>
 LinkedList<TData> *create()
 {
     LinkedList<TData> *list = new LinkedList<TData>;
     return list;
+}
+
+template <typename TData>
+bool isEmpty(LinkedList<TData> *list)
+{
+    return (list->head == NULL);
+}
+
+template <typename TData>
+Node<TData> *searchItem(LinkedList<TData> *list, int val)
+{
+    if (isEmpty(list))
+    {
+        return NULL;
+    }
+    Node<TData> *current = list->head;
+
+    do
+    {
+        if (current->data.id == val)
+        {
+            return current;
+        }
+        current = current->next;
+    } while (current->next != NULL);
+    return NULL;
+}
+
+template <typename TData>
+void printList(LinkedList<TData> *list, void (*print)(TData))
+{
+    Node<TData> *current = list->head;
+    do
+    {
+        print(current->data);
+        current = current->next;
+    } while (current != NULL);
+    cout << endl;
 }

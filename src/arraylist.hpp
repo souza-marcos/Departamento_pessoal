@@ -11,7 +11,7 @@ template <typename TData>
 bool insertItem(ArrayList<TData> *, TData, int);
 
 template <typename TData>
-void printList(ArrayList<TData> *);
+void printList(ArrayList<TData> *, void (*print)(TData));
 
 template <typename TData>
 int searchItem(ArrayList<TData> *, TData);

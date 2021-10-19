@@ -9,7 +9,7 @@ struct ArrayList
 };
 
 template <typename TData>
-ArrayList<TData>* create(int maxSize)
+ArrayList<TData> *create(int maxSize)
 {
     ArrayList<TData> *list = new ArrayList<TData>;
     list->data = new TData[maxSize];
@@ -36,12 +36,11 @@ bool insertItem(ArrayList<TData> *list, TData item, int tamMax)
 }
 
 template <typename TData>
-void printList(ArrayList<TData> *list)
+void printList(ArrayList<TData> *list, void (*print)(TData))
 {
-    cout << "\nList: ";
     for (int i = 0; i < list->size; i++)
     {
-        cout << list->data[i].id << " ";
+        print(list->data[i]);
     }
     cout << endl;
 }

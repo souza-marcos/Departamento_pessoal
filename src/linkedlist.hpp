@@ -8,7 +8,12 @@ template <typename TData>
 LinkedList<TData> *create();
 
 template <typename TData>
-void insert(TData, LinkedList<TData> *);
+void insertItem(TData, LinkedList<TData> *);
 
+template <typename TData>
+TData *searchItem(LinkedList<TData>, int);
+
+template <typename TData>
+void printList(LinkedList<TData> *list, void (*print)(TData));
 
 #include "linkedlist.cpp"
