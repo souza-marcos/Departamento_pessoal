@@ -16,4 +16,7 @@ TData *searchItem(LinkedList<TData>, int);
 template <typename TData>
 void printList(LinkedList<TData> *list, void (*print)(TData));
 
+template <typename TData>
+bool deleteItem(LinkedList<TData> *list, Node<TData> *&node);
+
 #include "linkedlist.cpp"

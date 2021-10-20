@@ -45,7 +45,7 @@ bool isEmpty(LinkedList<TData> *list)
 }
 
 template <typename TData>
-Node<TData> *searchItem(LinkedList<TData> *list, int val)
+Node<TData> *searchItem(LinkedList<TData> *list, int val, bool (*compare)(TData, int))
 {
     if (isEmpty(list))
     {
@@ -55,12 +55,12 @@ Node<TData> *searchItem(LinkedList<TData> *list, int val)
 
     do
     {
-        if (current->data.id == val)
+        if (compare(current->data, val))
         {
             return current;
         }
         current = current->next;
-    } while (current->next != NULL);
+    } while (current != NULL);
     return NULL;
 }
 
@@ -68,10 +68,25 @@ template <typename TData>
 void printList(LinkedList<TData> *list, void (*print)(TData))
 {
     Node<TData> *current = list->head;
-    do
+    while (current != NULL)
     {
         print(current->data);
         current = current->next;
-    } while (current != NULL);
+    }
     cout << endl;
+}
+
+template <typename TData>
+bool deleteItem(LinkedList<TData> *list, Node<TData> *&node)
+{
+    if (node == NULL)
+    {
+        return false;
+    }
+
+    Node<TData> *nextNode = node->next;
+    delete node;
+    node = nextNode;
+    list->last = node;
+    return true;
 }

@@ -46,11 +46,11 @@ void printList(ArrayList<TData> *list, void (*print)(TData))
 }
 
 template <typename TData>
-int searchItem(ArrayList<TData> *list, int val)
+int searchItem(ArrayList<TData> *list, int val, bool (*compare)(TData, int))
 {
     for (int i = 0; i < list->size; i++)
     {
-        if (list->data[i].id == val)
+        if (compare(list->data[i], val))
         {
             return i;
         }
@@ -59,9 +59,9 @@ int searchItem(ArrayList<TData> *list, int val)
 }
 
 template <typename TData>
-bool deleteItem(ArrayList<TData> *list, int val)
+bool deleteItem(ArrayList<TData> *list, int val, bool (*compare)(TData, int))
 {
-    int first = searchItem(list, val);
+    int first = searchItem(list, val, compare);
     if (first < 0)
     {
         return false;

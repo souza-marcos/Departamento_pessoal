@@ -28,7 +28,11 @@ LinkedList<Employee> *employees;
 void mainMenu();
 void registerEmployee();
 void insertProject();
+void deleteProject();
 void printAllEmployees();
+void saveEmployees();
+void getEmployees();
+void deleteEmp();
 
 int main()
 {
@@ -36,8 +40,11 @@ int main()
     cout << "BEM VINDO AO SISTEMA DE DEPARTAMENTO PESSOAL\n";
     employees = create<Employee>();
 
+    getEmployees(); // Falta cobrir a parte de erros sobre nada no arquivo
+
     mainMenu();
     cout << "VOLTE SEMPRE!!";
+    saveEmployees();
 
     delete employees;
 
@@ -63,6 +70,16 @@ void printEmployee(Employee e)
     printList(e.projects, printProject);
 }
 
+bool compareEmployee(Employee e, int val)
+{
+    return e.id == val;
+}
+
+bool compareProject(Project p, int val)
+{
+    return (p.id == val);
+}
+
 // ----------------------- Business Rule Functions ---------------------
 
 void mainMenu()
@@ -74,6 +91,9 @@ void mainMenu()
         cout << "(1) - Inserir novo funcionario.\n";
         cout << "(2) - Inserir projeto a um funcionario.\n";
         cout << "(3) - Imprimir todos os funcionarios.\n";
+        cout << "(4) - Excluir projeto.\n";
+        cout << "(5) - Excluir funcionarios sem projeto.\n";
+        cout << "(6) - Imprimir contra-cheque\n";
         cout << "(0) - Sair. \n";
         cout << "Sua Opcao: ";
         cin >> option;
@@ -90,6 +110,18 @@ void mainMenu()
 
         case 3:
             printAllEmployees();
+            break;
+
+        case 4:
+            deleteProject();
+            break;
+
+        case 5:
+            deleteEmp();
+            break;
+
+        case 6:
+            deleteEmp();
             break;
 
         default:
@@ -148,7 +180,7 @@ void insertProject()
     cout << "Digite o codigo do funcionario: ";
     int id;
     cin >> id;
-    Employee *e = &searchItem(employees, id)->data;
+    Employee *e = &searchItem(employees, id, compareEmployee)->data;
     if (e == NULL)
     {
         cout << "ERRO: O funcionario nao existe\n";
@@ -179,6 +211,50 @@ void printAllEmployees()
     system("pause");
 }
 
+void deleteProject()
+{
+    cout << "EXCLUSAO DE PROJETO DO FUNCIONARIO\n";
+    cout << "Digite o codigo do funcionario: ";
+    int id;
+    cin >> id;
+    Employee *e = &searchItem(employees, id, compareEmployee)->data;
+    if (e == NULL)
+    {
+        cout << "ERRO: O funcionario nao existe\n";
+        system("pause");
+        return;
+    }
+    cout << "FUNCIONARIO ENCONTRADO!\n";
+    printEmployee(*e);
+
+    cout << "\nDigite o codigo do projeto: ";
+    int idP;
+    cin >> idP;
+
+    cout << endl
+         << (deleteItem(e->projects, idP, compareProject) ? "Projeto excluido" : "Nao foi possivel excluir o projeto") << endl;
+    system("pause");
+}
+
+void deleteEmp() // Do not work
+{
+    cout << "EXCLUSAO DE FUNCIONARIOS SEM PROJETOS\n";
+    Node<Employee> *node = employees->head;
+    int count = 0;
+    while (node != NULL)
+    {
+        if (node->data.projects->size == 0)
+        {
+            if (deleteItem(employees, node))
+            {
+                count++;
+            }
+        }
+        node = node->next;
+    }
+    cout << "Foram apagados " << count << " funcionarios.\n";
+}
+
 // ----------------------- File Operation Functions -----------------------
 
 void saveEmployees()
@@ -186,13 +262,77 @@ void saveEmployees()
     ofstream oust;
     oust.open("funcionarios.bin", ofstream::out | ofstream::trunc);
 
-    if(!oust.is_open() || oust.fail()){
+    if (!oust.is_open() || oust.fail())
+    {
         cout << "\n\nERRO AO SALVAR OS DADOS\n\n";
         return;
     }
-    ///print I'm here 
 
+    Node<Employee> *current = employees->head;
+    while (current != NULL)
+    {
+        oust << current->data.id << "\n"
+             << current->data.name << "\n"
+             << current->data.address << "\n"
+             << current->data.nDepends << "\n"
+             << current->data.projects->size;
+
+        Project p;
+        for (int i = 0; i < current->data.projects->size; i++)
+        {
+            p = current->data.projects->data[i];
+            oust << "\n"
+                 << p.id << "\n"
+                 << p.name << "\n"
+                 << p.hoursPerWeek;
+        }
+        if (current->next != NULL)
+        {
+            oust << "\n";
+        }
+        current = current->next;
+    }
+
+    oust.close();
 }
-void getEmployees(){
+void getEmployees()
+{
+    ifstream ist;
+    ist.open("funcionarios.bin");
 
+    if (!ist.is_open() || ist.fail())
+    {
+        cout << "\n\nERRO AO ABRIR O ARQUIVO\n\n";
+        return;
+    }
+
+    ist.get();
+    while (!ist.eof())
+    {
+        ist.unget();
+        Employee e;
+        ist >> e.id;
+        ist.ignore();
+        ist.getline(e.name, 25, '\n');
+        ist.getline(e.address, 45, '\n');
+        ist >> e.nDepends;
+
+        e.projects = create<Project>(5);
+        int size;
+        ist >> size;
+
+        Project p;
+        for (int i = 0; i < size; i++)
+        {
+            ist >> p.id;
+            ist.ignore();
+            ist.getline(p.name, 25, '\n');
+            ist >> p.hoursPerWeek;
+            clog << (insertItem(e.projects, p, MAXPROJ)) ? "" : "\nERRO AO INSERIR PROJETO (getEmployees)\n";
+        }
+        insertItem(e, employees);
+        ist.get();
+    }
+
+    ist.close();
 }
