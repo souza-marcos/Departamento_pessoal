@@ -15,6 +15,13 @@ struct LinkedList
 };
 
 template <typename TData>
+LinkedList<TData> *create()
+{
+    LinkedList<TData> *list = new LinkedList<TData>;
+    return list;
+}
+
+template <typename TData>
 void insertItem(TData e, LinkedList<TData> *list)
 {
     if (list->head == NULL)
@@ -29,13 +36,6 @@ void insertItem(TData e, LinkedList<TData> *list)
     list->last = list->last->next;
     list->last->next = NULL;
     list->last->data = e;
-}
-
-template <typename TData>
-LinkedList<TData> *create()
-{
-    LinkedList<TData> *list = new LinkedList<TData>;
-    return list;
 }
 
 template <typename TData>
@@ -85,8 +85,19 @@ bool deleteItem(LinkedList<TData> *list, Node<TData> *&node)
     }
 
     Node<TData> *nextNode = node->next;
-    delete node;
+    node->data = nextNode->data;
+    node->next = nextNode->next;
     node = nextNode;
-    list->last = node;
+    if (node->next == NULL)
+    {
+        list->last = node;
+    }
+    delete nextNode;
     return true;
 }
+
+/**
+template <typename TData> 
+void unAlloc(LinkedList<TData> *list){
+
+}**/

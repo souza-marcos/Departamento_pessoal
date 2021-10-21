@@ -33,14 +33,16 @@ void printAllEmployees();
 void saveEmployees();
 void getEmployees();
 void deleteEmp();
+void printPayment();
+void selectEmployee();
 
 int main()
 {
-
+    system("cls");
     cout << "BEM VINDO AO SISTEMA DE DEPARTAMENTO PESSOAL\n";
     employees = create<Employee>();
 
-    getEmployees(); // Falta cobrir a parte de erros sobre nada no arquivo
+    getEmployees();
 
     mainMenu();
     cout << "VOLTE SEMPRE!!";
@@ -80,6 +82,27 @@ bool compareProject(Project p, int val)
     return (p.id == val);
 }
 
+void printPayCheck(Employee e)
+{
+    cout << "\nCODIGO: " << e.id
+         << "\nNOME: " << e.name
+         << "\nTOTAL DE HORAS SEMANAIS: ";
+    float sumHours = 0;
+    for (int i = 0; i < e.projects->size; i++)
+    {
+        sumHours += e.projects->data[i].hoursPerWeek;
+    }
+    cout << sumHours;
+    float salary = 45 * sumHours + 35 * e.nDepends;
+    float inss = 0.085 * salary;
+    float ir = 0.15 * salary;
+    float freeSalary = salary - (inss + ir);
+    cout << "\nSALARIO BRUTO: " << salary
+         << "\nDESCONTO INSS: " << inss
+         << "\nDESCONTO IR: " << ir
+         << "\nSALARIO LIQUIDO: " << freeSalary;
+}
+
 // ----------------------- Business Rule Functions ---------------------
 
 void mainMenu()
@@ -90,10 +113,11 @@ void mainMenu()
         cout << "MENU PRINCIPAL\n";
         cout << "(1) - Inserir novo funcionario.\n";
         cout << "(2) - Inserir projeto a um funcionario.\n";
-        cout << "(3) - Imprimir todos os funcionarios.\n";
-        cout << "(4) - Excluir projeto.\n";
-        cout << "(5) - Excluir funcionarios sem projeto.\n";
+        cout << "(3) - Excluir projeto.\n";
+        cout << "(4) - Excluir funcionarios sem projeto.\n";
+        cout << "(5) - Consulta de um funcionario.\n";
         cout << "(6) - Imprimir contra-cheque\n";
+        cout << "(7) - Imprimir todos os funcionarios.\n";
         cout << "(0) - Sair. \n";
         cout << "Sua Opcao: ";
         cin >> option;
@@ -109,21 +133,24 @@ void mainMenu()
             break;
 
         case 3:
-            printAllEmployees();
-            break;
-
-        case 4:
             deleteProject();
             break;
 
-        case 5:
+        case 4:
             deleteEmp();
+            break;
+
+        case 5:
+            selectEmployee();
             break;
 
         case 6:
-            deleteEmp();
+            printPayment();
             break;
 
+        case 7:
+            printAllEmployees();
+            break;
         default:
             break;
         }
@@ -133,24 +160,61 @@ void mainMenu()
 
 void cadProj(Employee *e)
 {
+
     Project p;
-    cout << "Digite o codigo do projeto: ";
-    cin >> p.id;
+
+    while (true)
+    {
+        cout << "Digite o codigo do projeto: ";
+        cin >> p.id;
+        if (searchItem(e->projects, p.id, compareProject) == -1)
+        {
+            break;
+        }
+        cout << "Codigo ja existente! Deseja digitar um codigo diferente? (s/n) ";
+        char c;
+        cin >> c;
+        cin.ignore();
+        if (c == 'n')
+        {
+            cout << "Nao foi possivel inserir o Projeto";
+            cout << endl;
+            system("pause");
+            return;
+        }
+    }
+
     cout << "Digite o nome: ";
     cin.ignore();
     getLineConsole(p.name, 25);
     cout << "Digite as horas por semana para esse projeto: ";
     cin >> p.hoursPerWeek;
 
-    cout << (insertItem<Project>(e->projects, p, MAXPROJ) == 1) ? "Inserido com sucesso" : "ERRO ao inserir";
+    cout << (insertItem<Project>(e->projects, p, MAXPROJ) == 1 ? "Inserido com sucesso\n" : "ERRO ao inserir\n");
 }
 
 void registerEmployee()
 {
     Employee e;
     cout << "INCLUSAO DE NOVO FUNCIONARIO\n";
-    cout << "Digite o codigo: ";
-    cin >> e.id;
+    while (true)
+    {
+        cout << "Digite o codigo: ";
+        cin >> e.id;
+        if (searchItem(employees, e.id, compareEmployee) != NULL)
+        {
+            cout << "Codigo ja existente! Deseja digitar um codigo diferente? (s/n) ";
+            char c;
+            cin >> c;
+            if (c == 'n')
+            {
+                cout << "Nao foi possivel inserir o Funcionario\n";
+                return;
+            }
+            continue;
+        }
+        break;
+    }
     cout << "Digite o nome: ";
     cin.ignore();
     getLineConsole(e.name, 25);
@@ -165,13 +229,18 @@ void registerEmployee()
 
     do
     {
+        if (e.projects->size == MAXPROJ)
+        {
+            cout << "\nMaximo de projetos por funcionario ja inseridos";
+            break;
+        }
         cadProj(&e);
         cout << "\nInserir mais projetos para este funcionario? (s/n) ";
         cin >> nextProject;
     } while (nextProject != 'n');
 
     insertItem<Employee>(e, employees);
-    cout << "Inserido com sucesso\n";
+    cout << "Inserido Funcionario com sucesso\n";
 }
 
 void insertProject()
@@ -200,7 +269,7 @@ void insertProject()
 
     if (e->projects->size == MAXPROJ)
     {
-        cout << "MAXIMO DE PROJETOS JA INSERIDOS";
+        cout << "MAXIMO DE PROJETOS JA INSERIDOS\n";
         system("pause");
     }
 }
@@ -253,6 +322,24 @@ void deleteEmp() // Do not work
         node = node->next;
     }
     cout << "Foram apagados " << count << " funcionarios.\n";
+    system("pause");
+}
+
+void printPayment()
+{
+    printList(employees, printPayCheck);
+    system("pause");
+}
+
+void selectEmployee()
+{
+    cout << "Digite o codigo do funcionario: ";
+    int id;
+    cin >> id;
+    Employee e = searchItem(employees, id, compareEmployee)->data;
+    printEmployee(e);
+    cout << endl;
+    system("pause");
 }
 
 // ----------------------- File Operation Functions -----------------------
@@ -328,7 +415,7 @@ void getEmployees()
             ist.ignore();
             ist.getline(p.name, 25, '\n');
             ist >> p.hoursPerWeek;
-            clog << (insertItem(e.projects, p, MAXPROJ)) ? "" : "\nERRO AO INSERIR PROJETO (getEmployees)\n";
+            clog << (insertItem(e.projects, p, MAXPROJ) ? "" : "\nERRO AO INSERIR PROJETO (getEmployees)\n");
         }
         insertItem(e, employees);
         ist.get();
