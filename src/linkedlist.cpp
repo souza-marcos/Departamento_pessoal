@@ -83,16 +83,38 @@ bool deleteItem(LinkedList<TData> *list, Node<TData> *&node)
     {
         return false;
     }
-
-    Node<TData> *nextNode = node->next;
-    node->data = nextNode->data;
-    node->next = nextNode->next;
-    node = nextNode;
-    if (node->next == NULL)
+    if (node->next == NULL) // The last position should be the before item || It looks like I will have to iterate the linkedlist
     {
-        list->last = node;
+
+        Node<TData> *&it = list->head; //*&
+        while (it != NULL)
+        {
+            if (it->next == node)
+            {
+                //delete (it->next); // tambem
+                it->next = NULL;
+                list->last = it;
+                break;
+            }
+            it = it->next;
+        }
+        //delete it; //tambem
+        //delete node;
+        //node = NULL;
     }
-    delete nextNode;
+    else
+    {
+        Node<TData> *nextNode = node->next;
+        node->data = nextNode->data;
+        node->next = nextNode->next;
+        //node = nextNode;
+        if (node->next == NULL)
+        {
+            list->last = node;
+        }
+        delete nextNode;
+    }
+
     return true;
 }
 

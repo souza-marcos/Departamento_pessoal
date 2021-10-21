@@ -110,6 +110,7 @@ void mainMenu()
     int option;
     do
     {
+        system("cls");
         cout << "MENU PRINCIPAL\n";
         cout << "(1) - Inserir novo funcionario.\n";
         cout << "(2) - Inserir projeto a um funcionario.\n";
@@ -121,6 +122,7 @@ void mainMenu()
         cout << "(0) - Sair. \n";
         cout << "Sua Opcao: ";
         cin >> option;
+        system("cls");
 
         switch (option)
         {
@@ -231,7 +233,8 @@ void registerEmployee()
     {
         if (e.projects->size == MAXPROJ)
         {
-            cout << "\nMaximo de projetos por funcionario ja inseridos";
+            cout << "\nMaximo de projetos por funcionario ja inseridos\n";
+            system("pause");
             break;
         }
         cadProj(&e);
@@ -240,7 +243,7 @@ void registerEmployee()
     } while (nextProject != 'n');
 
     insertItem<Employee>(e, employees);
-    cout << "Inserido Funcionario com sucesso\n";
+    cout << "Funcionario inserido com sucesso\n";
 }
 
 void insertProject()
@@ -309,6 +312,7 @@ void deleteEmp() // Do not work
 {
     cout << "EXCLUSAO DE FUNCIONARIOS SEM PROJETOS\n";
     Node<Employee> *node = employees->head;
+    
     int count = 0;
     while (node != NULL)
     {
