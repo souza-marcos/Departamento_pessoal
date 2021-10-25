@@ -39,11 +39,8 @@ void selectEmployee();
 int main()
 {
     system("cls");
-    cout << "BEM VINDO AO SISTEMA DE DEPARTAMENTO PESSOAL\n";
     employees = create<Employee>();
-
     getEmployees();
-
     mainMenu();
     cout << "VOLTE SEMPRE!!";
     saveEmployees();
@@ -56,9 +53,10 @@ int main()
 
 void printProject(Project p)
 {
-    cout << "CODIGO: " << p.id
-         << "\nNOME: " << p.name
-         << "\nHORAS POR SEMANA: " << p.hoursPerWeek
+    cout << "\tCODIGO: " << p.id
+         << "\n\ttNOME: " << p.name
+         << "\n\tHORAS POR SEMANA: " << p.hoursPerWeek
+         << endl
          << endl;
 }
 
@@ -69,6 +67,11 @@ void printEmployee(Employee e)
          << "\nENDERECO: " << e.address
          << "\nNUMERO DE DEPENDENTES: " << e.nDepends
          << "\nPROJETOS:\n\n";
+    if (e.projects->size == 0)
+    {
+        cout << " ---- Sem Projetos ----\n";
+        return;
+    }
     printList(e.projects, printProject);
 }
 
@@ -100,7 +103,7 @@ void printPayCheck(Employee e)
     cout << "\nSALARIO BRUTO: " << salary
          << "\nDESCONTO INSS: " << inss
          << "\nDESCONTO IR: " << ir
-         << "\nSALARIO LIQUIDO: " << freeSalary;
+         << "\nSALARIO LIQUIDO: " << freeSalary << endl;
 }
 
 // ----------------------- Business Rule Functions ---------------------
@@ -312,7 +315,7 @@ void deleteEmp() // Do not work
 {
     cout << "EXCLUSAO DE FUNCIONARIOS SEM PROJETOS\n";
     Node<Employee> *node = employees->head;
-    
+
     int count = 0;
     while (node != NULL)
     {
@@ -340,7 +343,13 @@ void selectEmployee()
     cout << "Digite o codigo do funcionario: ";
     int id;
     cin >> id;
-    Employee e = searchItem(employees, id, compareEmployee)->data;
+    Node<Employee> *node = searchItem(employees, id, compareEmployee);
+    if(node == NULL){
+        cout << "\nERRO: O funcionario nao existe\n";
+        system("pause");
+        return;
+    }
+    Employee e = node->data;
     printEmployee(e);
     cout << endl;
     system("pause");
