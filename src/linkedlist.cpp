@@ -1,5 +1,3 @@
-#include <iostream>
-
 template <typename TData>
 struct Node
 {
@@ -26,7 +24,7 @@ void insertItem(TData e, LinkedList<TData> *list)
 {
     if (list->head == NULL)
     {
-        list->head = new Node<TData>; //Segmentation fault
+        list->head = new Node<TData>; 
         list->last = list->head;
         list->head->next = NULL;
         list->last->data = e;
@@ -83,43 +81,27 @@ bool deleteItem(LinkedList<TData> *list, Node<TData> *&node)
     {
         return false;
     }
-    if (node->next == NULL) // The last position should be the before item || It looks like I will have to iterate the linkedlist
+    if (node == list->head)
     {
-
-        Node<TData> *&it = list->head; //*&
-        while (it != NULL)
+        list->head = node->next;
+        if (node->next == NULL)
         {
-            if (it->next == node)
-            {
-                //delete (it->next); // tambem
-                it->next = NULL;
-                list->last = it;
-                break;
-            }
-            it = it->next;
+            list->last = list->head;
         }
-        //delete it; //tambem
-        //delete node;
-        //node = NULL;
     }
     else
     {
-        Node<TData> *nextNode = node->next;
-        node->data = nextNode->data;
-        node->next = nextNode->next;
-        //node = nextNode;
+        Node<TData> *prev = list->head;
+        while (prev->next != node)
+        {
+            prev = prev->next;
+        }
+        prev->next = node->next;
         if (node->next == NULL)
         {
-            list->last = node;
+            list->last = prev;
         }
-        delete nextNode;
     }
-
+    delete node; 
     return true;
 }
-
-/**
-template <typename TData> 
-void unAlloc(LinkedList<TData> *list){
-
-}**/
