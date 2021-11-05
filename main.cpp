@@ -54,7 +54,7 @@ int main()
 void printProject(Project p)
 {
     cout << "\tCODIGO: " << p.id
-         << "\n\ttNOME: " << p.name
+         << "\n\tNOME: " << p.name
          << "\n\tHORAS POR SEMANA: " << p.hoursPerWeek
          << endl
          << endl;
@@ -311,7 +311,7 @@ void deleteProject()
     system("pause");
 }
 
-void deleteEmp() // Do not work
+void deleteEmp() 
 {
     cout << "EXCLUSAO DE FUNCIONARIOS SEM PROJETOS\n";
     Node<Employee> *node = employees->head;
