@@ -50,9 +50,13 @@ int main()
     return 0;
 }
 // ----------------------- Functions for Project and Employee ------------
-
+/**
+ * Print a project struct
+ * @param Project Struct that will be printed
+ */
 void printProject(Project p)
 {
+
     cout << "\tCODIGO: " << p.id
          << "\n\tNOME: " << p.name
          << "\n\tHORAS POR SEMANA: " << p.hoursPerWeek
@@ -60,6 +64,10 @@ void printProject(Project p)
          << endl;
 }
 
+/**
+ * Print a employee struct
+ * @param Employee Struct that will be printed
+ */
 void printEmployee(Employee e)
 {
     cout << "\nCODIGO: " << e.id
@@ -75,16 +83,32 @@ void printEmployee(Employee e)
     printList(e.projects, printProject);
 }
 
+/**
+ * Compare Employee with a identifier
+ * @param e Employee that will be compared
+ * @param val Unique Identifier
+ * @return True if compare method is true 
+ */
 bool compareEmployee(Employee e, int val)
 {
     return e.id == val;
 }
 
+/**
+ * Compare Project with a identifier
+ * @param p Project that will be compared
+ * @param val Unique Identifier
+ * @return True if compare method is true 
+ */
 bool compareProject(Project p, int val)
 {
     return (p.id == val);
 }
 
+/**
+ * Print a payment card of employee
+ * @param e Employee whose payment will be printed
+ */
 void printPayCheck(Employee e)
 {
     cout << "\nCODIGO: " << e.id
@@ -108,6 +132,9 @@ void printPayCheck(Employee e)
 
 // ----------------------- Business Rule Functions ---------------------
 
+/**
+ * Handle the user choice about main menu 
+ */
 void mainMenu()
 {
     int option;
@@ -163,9 +190,12 @@ void mainMenu()
     } while (option != 0);
 }
 
+/**
+ * Register a project into a employee
+ * @param *e Pointer of employee
+ */
 void cadProj(Employee *e)
 {
-
     Project p;
 
     while (true)
@@ -198,6 +228,9 @@ void cadProj(Employee *e)
     cout << (insertItem<Project>(e->projects, p, MAXPROJ) == 1 ? "Inserido com sucesso\n" : "ERRO ao inserir\n");
 }
 
+/**
+ * Register a employee 
+ */
 void registerEmployee()
 {
     Employee e;
@@ -248,7 +281,9 @@ void registerEmployee()
     insertItem<Employee>(e, employees);
     cout << "Funcionario inserido com sucesso\n";
 }
-
+/**
+ * Handle the main menu option of insert projects into employee 
+ */
 void insertProject()
 {
     cout << "INCLUSAO DE PROJETO A FUNCIONARIO\n";
@@ -280,12 +315,18 @@ void insertProject()
     }
 }
 
+/**
+ * Print all employees
+ */
 void printAllEmployees()
 {
     printList(employees, printEmployee);
     system("pause");
 }
 
+/**
+ * Handle the main menu option of delete projects
+ */
 void deleteProject()
 {
     cout << "EXCLUSAO DE PROJETO DO FUNCIONARIO\n";
@@ -311,7 +352,10 @@ void deleteProject()
     system("pause");
 }
 
-void deleteEmp() 
+/**
+ * Handle the main menu option of delete employees without projects
+ */
+void deleteEmp()
 {
     cout << "EXCLUSAO DE FUNCIONARIOS SEM PROJETOS\n";
     Node<Employee> *node = employees->head;
@@ -332,19 +376,26 @@ void deleteEmp()
     system("pause");
 }
 
+/**
+ * Handle the main menu option of print payment
+ */
 void printPayment()
 {
     printList(employees, printPayCheck);
     system("pause");
 }
 
+/**
+ * Handle the main menu option of select employees 
+ */
 void selectEmployee()
 {
     cout << "Digite o codigo do funcionario: ";
     int id;
     cin >> id;
     Node<Employee> *node = searchItem(employees, id, compareEmployee);
-    if(node == NULL){
+    if (node == NULL)
+    {
         cout << "\nERRO: O funcionario nao existe\n";
         system("pause");
         return;
@@ -357,6 +408,9 @@ void selectEmployee()
 
 // ----------------------- File Operation Functions -----------------------
 
+/**
+ * Save the employees into a file "funcionarios.bin"
+ */
 void saveEmployees()
 {
     ofstream oust;
@@ -395,6 +449,10 @@ void saveEmployees()
 
     oust.close();
 }
+
+/**
+ * Get the employees saved from file "funcionarios.bin"
+ */
 void getEmployees()
 {
     ifstream ist;
